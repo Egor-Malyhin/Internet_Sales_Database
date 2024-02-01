@@ -12,7 +12,7 @@ public class OrderRepository extends Repository<Order> {
         return findByCell("order_date", keyword);
     }
 
-    public List<Order> searchByModel(String keyword) {
+    public List<Order> searchByOrderTime(String keyword) {
         return findByCell("order_time", keyword);
     }
 

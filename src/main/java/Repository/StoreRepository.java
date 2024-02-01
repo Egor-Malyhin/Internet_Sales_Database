@@ -12,10 +12,6 @@ public class StoreRepository extends Repository<Store> {
         return findByCell("email_address", keyword);
     }
 
-    public List<Store> searchByModel(String keyword) {
-        return findByCell("model", keyword);
-    }
-
     public List<Store> searchByDeliveryPayment(String keyword) {
         return findByCell("del_payment", keyword);
     }

@@ -5,7 +5,7 @@ import Models.Product;
 import java.util.List;
 
 public class ProductRepository extends Repository<Product> {
-    ProductRepository(Class <Product> entity) {
+    public ProductRepository(Class <Product> entity) {
         super(entity);
     }
     public List<Product> searchByName(String keyword) {

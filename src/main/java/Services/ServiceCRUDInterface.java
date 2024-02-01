@@ -19,5 +19,19 @@ abstract class Service<T> implements ServiceCRUDInterface<T>{
         this.repository = repository;
     }
 
-
+    public List<T> findAll(){
+        return repository.findAll();
+    }
+    public T findById(int id){
+        return repository.findById(id);
+    }
+    public void save(T object){
+        repository.save(object);
+    }
+    public void update(T object){
+        repository.update(object);
+    }
+    public void delete(T object){
+        repository.delete(object);
+    }
 }

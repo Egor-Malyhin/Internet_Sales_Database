@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 public class Menu {
     private Scanner scanner;
+    private UserAction userAction= new UserAction();
     private boolean exit;
 
     public Menu() {
@@ -18,7 +19,7 @@ public class Menu {
 
             switch (choice) {
                 case 1:
-                    System.out.println("Вы выбрали опцию 1");
+                    userAction.findAllStores();
                     break;
                 case 2:
                     System.out.println("Вы выбрали опцию 2");
@@ -39,8 +40,8 @@ public class Menu {
     }
 
     private void printMenu() {
-        System.out.println("===== Консольное меню =====");
-        System.out.println("1. Выполнить действие 1");
+        System.out.println("===== Console Menu =====");
+        System.out.println("1. View All Stores");
         System.out.println("2. Выполнить действие 2");
         System.out.println("3. Выполнить действие 3");
         System.out.println("4. Выйти из программы");
