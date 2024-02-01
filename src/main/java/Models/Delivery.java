@@ -1,18 +1,23 @@
 package Models;
 
 import javax.persistence.*;
+import java.time.LocalTime;
+import java.util.Date;
+
 @Entity
-@Table (name = "orders")
+@Table (name = "delivery")
 public class Delivery {
     @Id
     @Column(name = "order_code")
     private int id;
-    @OneToOne (mappedBy = "delivery")
+    @OneToOne
+    @PrimaryKeyJoinColumn
     private Order order;
-    @Column(name = "delivery_date")
-    private String date;
-    @Column(name = "delivery_time")
-    private String time;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "delivery_date", columnDefinition = "DATE")
+    private Date date;
+    @Column(name = "delivery_time", columnDefinition = "time")
+    private LocalTime time;
     @Column(name = "delivery_address")
     private String address;
     @Column(name = "full_name_client")
@@ -22,7 +27,7 @@ public class Delivery {
 
     public Delivery() {
     }
-    public Delivery(int id, String date, String time, String address, String client_name, String courier_name) {
+    public Delivery(int id, Date date, LocalTime time, String address, String client_name, String courier_name) {
         this.id = id;
         this.date = date;
         this.time = time;
@@ -34,10 +39,10 @@ public class Delivery {
     public int getId() {
         return id;
     }
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
-    public String getTime() {
+    public LocalTime getTime() {
         return time;
     }
     public String getAddress() {return address;}
@@ -52,10 +57,10 @@ public class Delivery {
         return order;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
-    public void setTime(String time) {
+    public void setTime(LocalTime time) {
         this.time = time;
     }
     public void setAddress(String address) {
@@ -75,8 +80,8 @@ public class Delivery {
     public String toString() {
         return "models.Delivery{" +
                 "order_code=" + id +
-                ", delivery_date='" + date + '\'' +
-                ", delivery_time='" + time + '\'' +
+                ", delivery_date='" + date.toString() + '\'' +
+                ", delivery_time='" + time.toString() + '\'' +
                 ", delivery_address='" + address + '\'' +
                 ", full_name_client='" + client_name +'\'' +
                 ", full_name_courier='" + courier_name +'\'' +

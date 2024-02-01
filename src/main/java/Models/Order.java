@@ -13,8 +13,7 @@ public class Order {
     @ManyToOne(fetch = FetchType.LAZY) //
     @JoinColumn(name = "product_code")
     private Product product;
-    @OneToOne
-    @PrimaryKeyJoinColumn
+    @OneToOne (mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Delivery delivery;
     @Column(name = "order_date")
     private String date;

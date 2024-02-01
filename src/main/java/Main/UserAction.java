@@ -1,5 +1,6 @@
 package Main;
 
+import Models.Product;
 import Models.Store;
 import Services.DeliveryService;
 import Services.OrderService;
@@ -35,6 +36,20 @@ public class UserAction {
         //System.out.println("fff");
         List<Store> stores = storeService.findAll();
         printStores(stores);
+    }
+
+    private void printProducts(List<Product> products){
+        System.out.println("Stores: " + '\n');
+        for(Product product: products){
+            System.out.println(product.toString());
+        }
+        System.out.println("_____________________________________");
+    }
+
+    public void findAllProducts(){
+        System.out.println("fff");
+        List<Product> products = productService.findAll();
+        printProducts(products);
     }
 
 

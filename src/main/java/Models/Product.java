@@ -2,6 +2,7 @@ package Models;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class Product {
     private int guarantee;
     @Lob
     @Column(name = "image", columnDefinition = "bytea")
+    @Type(type = "org.hibernate.type.BinaryType")
     private byte[] image;
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @Fetch(FetchMode.SUBSELECT)
@@ -104,7 +106,7 @@ public class Product {
                 ", tech_char='" + tech_char +'\'' +
                 ", price=" + price +
                 ", guarantee_period=" + guarantee +
-                ", image= E'\\x" + image + '\'' +
+                ", image= E'\\x" + image.toString() + '\'' +
                 '}';
     }
 }
