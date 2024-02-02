@@ -13,35 +13,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-public class DeliveryFacade {
-    private final DeliveryService deliveryService;
+public class DeliveryFacade extends Facade<Delivery>{
 
-    public DeliveryFacade(DeliveryService deliveryService) {
-        this.deliveryService = new DeliveryService();
+    public DeliveryFacade(DeliveryService deliveryService, Scanner scanner) {
+        super(scanner, deliveryService);
     }
 
     private void printDelivery(List<Delivery> deliverys) {
-        System.out.println("Stores: " + '\n');
+        System.out.println("Delivery: " + '\n');
         for (Delivery delivery : deliverys) {
             System.out.println(delivery.toString());
         }
-        System.out.println("_____________________________________");
-    }
-
-    public void findAllDelivery() {
-        System.out.println("fff");
-        List<Delivery> deliverys = deliveryService.findAll();
-        printDelivery(deliverys);
-    }
-
-    public void saveDelivery() {
-        Delivery delivery = constructDelivery();
-        if (delivery == null) {
-            System.out.println("Cannot Save by this Id.");
-            return;
-        }
-        deliveryService.save(delivery);
-        System.out.println("Delivery successfully saved.");
+        System.out.println("_________________________________________________________________________________________________");
     }
 
     private Delivery constructDelivery() {
@@ -54,7 +37,7 @@ public class DeliveryFacade {
             int id = scanner.nextInt();
             scanner.nextLine();
 
-            Delivery deliveryToInsert = deliveryService.findById(id);
+            Delivery deliveryToInsert = service.findById(id);
             if (deliveryToInsert != null)
                 return null;
 
@@ -89,17 +72,14 @@ public class DeliveryFacade {
         }
     }
 
-    public void updateDelivery() {
+    private Delivery constructDeliverytoUpdate() {
         try {
-            Scanner scanner = new Scanner(System.in);
-
-            System.out.print("Enter Id to update: ");
-            int id = scanner.nextInt();
+            int id = readIdFromConsole();
             scanner.nextLine();
 
-            Delivery deliveryToUpdate = deliveryService.findById(id);
+            Delivery deliveryToUpdate = service.findById(id);
             if (deliveryToUpdate == null)
-                return;
+                return null;
 
             System.out.println("Update student data:");
 
@@ -132,39 +112,20 @@ public class DeliveryFacade {
             if (!courier_full_name.isEmpty())
                 deliveryToUpdate.setCourierName(courier_full_name);
 
-
-            deliveryService.update(deliveryToUpdate);
-            System.out.print("Delivery successfully update.");
+            return deliveryToUpdate;
 
         } catch (ParseException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
-    public void deleteDelivery() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Enter Id to delete: ");
-        int id = scanner.nextInt();
+    @Override
+    public void findById() {
+        int id = readIdFromConsole();
         scanner.nextLine();
 
-        Delivery deliveryToDelete = deliveryService.findById(id);
-
-        if (deliveryToDelete == null)
-            System.out.println("Performance with such id not found.");
-
-        deliveryService.delete(deliveryToDelete);
-        System.out.println("Performance deleted.");
-    }
-
-    public void findDeliveryById(){
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Enter Id to delete: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-
-        Delivery delivery = deliveryService.findById(id);
+        Delivery delivery = service.findById(id);
 
         if (delivery == null)
             System.out.println("Delivery with such id not found.");
@@ -173,8 +134,14 @@ public class DeliveryFacade {
         }
     }
 
-    public void findDeliveryByCondition(){
-        Scanner scanner = new Scanner(System.in);
+    @Override
+    public void findAllData() {
+        List<Delivery> deliverys = service.findAll();
+        printDelivery(deliverys);
+    }
+
+    @Override
+    public void findDataByCondition() {
 
         System.out.println("Choose search criteria:");
         System.out.println("1. By Delivery Date");
@@ -193,31 +160,31 @@ public class DeliveryFacade {
             case 1:
                 System.out.print("Delivery Date: ");
                 String date = scanner.nextLine();
-                searchResult = deliveryService.searchByDeliveryDate(date);
+                searchResult = ((DeliveryService) service).searchByDeliveryDate(date);
                 break;
 
             case 2:
                 System.out.print("Delivery Time: ");
                 String time = scanner.nextLine();
-                searchResult = deliveryService.searchByDeliveryTime(time);
+                searchResult = ((DeliveryService) service).searchByDeliveryTime(time);
                 break;
 
             case 3:
                 System.out.print("Delivery Address: ");
                 String address = scanner.nextLine();
-                searchResult = deliveryService.searchByDeliveryAddress(address);
+                searchResult = ((DeliveryService) service).searchByDeliveryAddress(address);
                 break;
 
             case 4:
                 System.out.print("Client Full Name: ");
                 String client = scanner.nextLine();
-                searchResult = deliveryService.searchByFullNameClient(client);
+                searchResult = ((DeliveryService) service).searchByFullNameClient(client);
                 break;
 
             case 5:
                 System.out.print("Courier Full Name: ");
                 String courier = scanner.nextLine();
-                searchResult = deliveryService.searchByFullNameCourier(courier);
+                searchResult = ((DeliveryService) service).searchByFullNameCourier(courier);
                 break;
 
             default:
@@ -226,5 +193,42 @@ public class DeliveryFacade {
         if (searchResult != null) {
             printDelivery(searchResult);
         }
+    }
+
+    @Override
+    public void saveToDatabase() {
+        Delivery delivery = constructDelivery();
+        if (delivery == null) {
+            System.out.println("Cannot Save by this Id.");
+            return;
+        }
+        service.save(delivery);
+        System.out.println("Delivery successfully saved.");
+    }
+
+    @Override
+    public void updateInDatabase() {
+        Delivery deliveryToUpdate = constructDeliverytoUpdate();
+        if (deliveryToUpdate == null) {
+            System.out.println("Cannot update by this Id.");
+            return;
+        }
+        service.update(deliveryToUpdate);
+        System.out.println("Delivery successfully update.");
+    }
+
+    @Override
+    public void deleteFromDatabase() {
+        int id = readIdFromConsole();
+        scanner.nextLine();
+
+        Delivery deliveryToDelete = service.findById(id);
+
+        if (deliveryToDelete == null) {
+            System.out.println("Delivery with such id not found.");
+            return;
+        }
+        service.delete(deliveryToDelete);
+        System.out.println("Delivery deleted.");
     }
 }

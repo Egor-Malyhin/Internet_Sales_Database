@@ -1,6 +1,9 @@
 package Models;
 
 import javax.persistence.*;
+import java.time.LocalTime;
+import java.util.Date;
+
 @Entity
 @Table (name = "orders")
 public class Order {
@@ -16,9 +19,9 @@ public class Order {
     @OneToOne (mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Delivery delivery;
     @Column(name = "order_date")
-    private String date;
+    private Date date;
     @Column(name = "order_time")
-    private String time;
+    private LocalTime time;
     @Column(name = "quantity")
     private int quantity;
     @Column(name = "full_name_client")
@@ -31,8 +34,10 @@ public class Order {
 
     public Order() {
     }
-    public Order(int id, String date, String time, int quantity, String client_name, String number, boolean conf) {
+    public Order(int id, Store store, Product product, Date date, LocalTime time, int quantity, String client_name, String number, boolean conf) {
         this.id = id;
+        this.store=store;
+        this.product=product;
         this.date = date;
         this.time=time;
         this.quantity=quantity;
@@ -44,10 +49,10 @@ public class Order {
     public int getId() {
         return id;
     }
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
-    public String getTime() {
+    public LocalTime getTime() {
         return time;
     }
     public int getQuantity() {return quantity;}
@@ -70,10 +75,10 @@ public class Order {
         return delivery;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
-    public void setTime(String time) {
+    public void setTime(LocalTime time) {
         this.time = time;
     }
     public void setQuantity(int quantity) {
