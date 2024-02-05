@@ -107,12 +107,14 @@ public class Order {
     public String toString() {
         return "models.Order{" +
                 "order_code=" + id +
+                ", store_code=" + store.getId() +
+                ", product_code=" + product.getId() +
                 ", order_date='" + date + '\'' +
                 ", order_time='" + time + '\'' +
                 ", quantity=" + quantity +
                 ", full_name_client='" + client_name +'\'' +
                 ", phone_number='" + number +'\'' +
-                "order_conf=" + conf +
+                ", order_conf=" + conf +
                 '}';
     }
 }

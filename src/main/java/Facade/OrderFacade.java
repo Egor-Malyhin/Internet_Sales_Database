@@ -29,7 +29,7 @@ public class OrderFacade extends Facade<Order>{
         System.out.println("_________________________________________________________________________________________________");
     }
 
-    private Order constructOrder() {
+    private Order constructOrder() throws Exception {
         try {
             System.out.println("Add new order data:");
             int id = readIdFromConsole();
@@ -40,7 +40,7 @@ public class OrderFacade extends Facade<Order>{
                 return null;
 
             System.out.print("Store Id: ");
-            int storeId = scanner.nextInt();
+            int storeId = readIdFromConsole();
             scanner.nextLine();
 
             Store storeToInsert = new StoreService().findById(storeId);
@@ -51,7 +51,7 @@ public class OrderFacade extends Facade<Order>{
             int productId = scanner.nextInt();
             scanner.nextLine();
 
-            Product productToInsert = new ProductService().findById(id);
+            Product productToInsert = new ProductService().findById(productId);
             if (productToInsert == null)
                 return null;
 
@@ -76,7 +76,7 @@ public class OrderFacade extends Facade<Order>{
 
             System.out.print("Order Confirmed(true or false): ");
             String conf = scanner.nextLine();
-            boolean conf_ = Boolean.parseBoolean(conf);
+            boolean conf_ = boolValueValidation(conf);
 
             return new Order(id, storeToInsert, productToInsert, date, time, quantity, client_full_name, number, conf_);
 
@@ -86,7 +86,7 @@ public class OrderFacade extends Facade<Order>{
         }
     }
 
-    private Order constructOrderToUpdate() {
+    private Order constructOrderToUpdate() throws Exception {
         try {
             int id = readIdFromConsole();
             scanner.nextLine();
@@ -128,10 +128,10 @@ public class OrderFacade extends Facade<Order>{
             if (!number.isEmpty())
                 orderToUpdate.setNumber(number);
 
-            System.out.print("Order Confirmed(true or false): ");
+            System.out.print("Order Confirmed(y or n): ");
             String conf = scanner.nextLine();
             if (!conf.isEmpty()) {
-                boolean conf_ = Boolean.parseBoolean(conf);
+                boolean conf_ = boolValueValidation(conf);
                 orderToUpdate.setConf(conf_);
             }
             return orderToUpdate;
@@ -194,8 +194,10 @@ public class OrderFacade extends Facade<Order>{
 
             case 3:
                 System.out.print("Quantity: ");
-                String address = scanner.nextLine();
-                searchResult = ((OrderService) service).searchByQuantity(address);
+                int quantity = scanner.nextInt();
+                scanner.nextLine();
+                String _quantity = String.valueOf(quantity);
+                searchResult = ((OrderService) service).searchByQuantity(_quantity);
                 break;
 
             case 4:
@@ -226,24 +228,34 @@ public class OrderFacade extends Facade<Order>{
 
     @Override
     public void saveToDatabase() {
-        Order order = constructOrder();
-        if (order == null) {
-            System.out.println("Cannot Save by this Id.");
-            return;
+        try {
+            Order order = constructOrder();
+            if (order == null) {
+                System.out.println("Cannot Save by this Id.");
+                return;
+            }
+            service.save(order);
+            System.out.println("Delivery successfully saved.");
         }
-        service.save(order);
-        System.out.println("Delivery successfully saved.");
+        catch(Exception e){
+            System.out.println("Cannot save:" + e);
+        }
     }
 
     @Override
     public void updateInDatabase() {
-       Order orderToUpdate = constructOrderToUpdate();
-        if (orderToUpdate == null) {
-            System.out.println("Cannot update by this Id.");
-            return;
+        try {
+            Order orderToUpdate = constructOrderToUpdate();
+            if (orderToUpdate == null) {
+                System.out.println("Cannot update by this Id.");
+                return;
+            }
+            service.update(orderToUpdate);
+            System.out.println("Order successfully update.");
         }
-        service.update(orderToUpdate);
-        System.out.println("Order successfully update.");
+        catch(Exception e){
+            System.out.println("Cannot update:" + e);
+        }
     }
 
     @Override

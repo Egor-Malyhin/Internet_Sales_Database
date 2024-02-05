@@ -177,14 +177,18 @@ public class ProductFacade extends Facade<Product>{
 
             case 4:
                 System.out.print("Price: ");
-                String price = scanner.nextLine();
-                searchResult = ((ProductService) service).searchByPrice(price);
+                int price = scanner.nextInt();
+                scanner.nextLine();
+                String _price = String.valueOf(price);
+                searchResult = ((ProductService) service).searchByPrice(_price);
                 break;
 
             case 5:
                 System.out.print("Guarantee period: ");
-                String guarantee = scanner.nextLine();
-                searchResult = ((ProductService) service).searchByGuarantee(guarantee);
+                int guarantee = scanner.nextInt();
+                scanner.nextLine();
+                String _guarantee = String.valueOf(guarantee);
+                searchResult = ((ProductService) service).searchByGuarantee(_guarantee);
                 break;
 
             default:

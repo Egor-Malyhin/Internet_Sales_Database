@@ -20,7 +20,7 @@ public class StoreFacade extends Facade<Store> {
         System.out.println("_________________________________________________________________________________________________");
     }
 
-    private Store constructStore() {
+    private Store constructStore() throws Exception {
 
         System.out.println("Add new delivery data:");
 
@@ -33,14 +33,14 @@ public class StoreFacade extends Facade<Store> {
         System.out.print("Email address: ");
         String email = scanner.nextLine();
 
-        System.out.print("Delivery payment: ");
+        System.out.print("Delivery payment(y or n): ");
         String payment = scanner.nextLine();
-        boolean payment_ = Boolean.parseBoolean(payment);
+        boolean payment_ = boolValueValidation(payment);
 
         return new Store(id, email, payment_);
     }
 
-    private Store constructStoreToUpdate() {
+    private Store constructStoreToUpdate() throws Exception {
 
         int id = readIdFromConsole();
         scanner.nextLine();
@@ -59,8 +59,8 @@ public class StoreFacade extends Facade<Store> {
         System.out.print("Delivery payment: ");
         String payment = scanner.nextLine();
         if (!payment.isEmpty()) {
-            boolean payment_ = Boolean.parseBoolean(payment);
-            storeToUpdate.setEmail(email);
+            boolean payment_ = boolValueValidation(payment);
+            storeToUpdate.setPayment(payment_);
         }
 
         return storeToUpdate;
@@ -126,24 +126,33 @@ public class StoreFacade extends Facade<Store> {
 
     @Override
     public void saveToDatabase() {
-        Store store = constructStore();
-        if (store == null) {
-            System.out.println("Cannot Save by this Id.");
-            return;
+        try {
+            Store store = constructStore();
+            if (store == null) {
+                System.out.println("Cannot Save by this Id.");
+                return;
+            }
+            service.save(store);
+            System.out.println("Store successfully saved.");
+        } catch(Exception e){
+            System.out.println("Cannot save to Database:" + e);
         }
-        service.save(store);
-        System.out.println("Store successfully saved.");
     }
 
     @Override
     public void updateInDatabase() {
-        Store storeToUpdate = constructStoreToUpdate();
-        if (storeToUpdate == null) {
-            System.out.println("Cannot update by this Id.");
-            return;
+        try {
+            Store storeToUpdate = constructStoreToUpdate();
+            if (storeToUpdate == null) {
+                System.out.println("Cannot update by this Id.");
+                return;
+            }
+            service.update(storeToUpdate);
+            System.out.println("Store successfully update.");
         }
-        service.update(storeToUpdate);
-        System.out.println("Store successfully update.");
+        catch(Exception e){
+            System.out.println("Cannot update value in Database");
+        }
     }
 
     @Override

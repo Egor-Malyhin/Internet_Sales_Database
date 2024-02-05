@@ -46,9 +46,9 @@ abstract class Repository<T> implements RepositoryCRUDInterface<T> {
     public List<T> findByCell(String column, String keyword){
         try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
             String hqlString = "FROM " + entity.getSimpleName() +
-                    " WHERE lower(" + column + ") LIKE :keyword";
+                    " WHERE lower (CAST(" + column + " AS text)) LIKE :keyword";
             Query query = session.createQuery(hqlString, entity);
-            query.setParameter("keyword", "%" + keyword.toLowerCase() +"%");
+            query.setParameter("keyword", "%" + keyword.toLowerCase() + "%");
             return query.getResultList();
         } catch (Exception e) {
             e.printStackTrace();

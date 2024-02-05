@@ -31,4 +31,15 @@ abstract class Facade<T> implements ClientInterface{
         return scanner.nextInt();
     }
 
+    protected boolean boolValueValidation(String bool) throws Exception {
+        if (!bool.equals("y") && !bool.equals("n")) {
+            System.out.println("Wrong enter, try again");
+            throw new Exception("Wrong enter");
+        }
+        else{
+            if(bool.equals("y"))
+                return true;
+            else return false;
+        }
+    }
 }
